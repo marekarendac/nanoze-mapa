@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Na nože - Interaktívna mapa reštaurácií</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2ff; color: #333; }
+        html, body { height: 100%; overflow: hidden; }
+        .container { display: flex; height: 100vh; }
+        .map-wrapper { flex: 1; min-width: 0; }
+        #map { width: 100%; height: 100%; }
+        .sidebar { width: 360px; flex-shrink: 0; background: white; display: flex; flex-direction: column; height: 100vh; overflow: hidden; box-shadow: -2px 0 12px rgba(0,0,0,0.12); }
+        .sidebar-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 18px; font-size: 16px; font-weight: bold; flex-shrink: 0; }
+        .sidebar-top { flex-shrink: 0; padding: 11px 13px; border-bottom: 2px solid #e8eaf6; background: #fafbff; }
+        .filter-group { margin-bottom: 9px; }
+        .filter-group label { display: block; font-weight: bold; font-size: 11px; color: #555; margin-bottom: 4px; }
+        .filter-group select { width: 100%; padding: 8px 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 13px; cursor: pointer; background: white; }
+        .filter-group select:focus { outline: none; border-color: #764ba2; }
+        .legend { display: flex; flex-wrap: wrap; gap: 5px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 20px; background: #f0f4ff; border: 1px solid #dde0ff; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.15s; user-select: none; }
+        .legend-item:hover { background: #e0e4ff; transform: scale(1.05); }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 1.5px rgba(0,0,0,0.12); }
+        .list-header { flex-shrink: 0; padding: 9px 13px 7px; font-size: 12px; font-weight: bold; color: #667eea; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .list-count { background: #667eea; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+        .restaurant-list { flex: 1; overflow-y: auto; padding: 8px 10px; }
+        .restaurant-item { padding: 9px 11px; background: #f8f9fa; border-left: 4px solid #667eea; border-radius: 5px; cursor: pointer; transition: all 0.15s; margin-bottom: 6px; }
+        .restaurant-item:hover { background: #eef0ff; transform: translateX(4px); box-shadow: 0 2px 8px rgba(102,126,234,0.15); }
+        /* HIGHLIGHT pri kliknutí na marker */
+        .restaurant-item.active { background: #fff8e1; border-left-color: #f39c12 !important; box-shadow: 0 2px 12px rgba(243,156,18,0.35); transform: translateX(4px); }
+        .restaurant-item:last-child { margin-bottom: 0; }
+        .r-name { font-weight: bold; color: #222; font-size: 13px; margin-bottom: 3px; }
+        .r-info { font-size: 11px; color: #777; line-height: 1.6; }
+        .r-knives { font-size: 12px; margin-top: 3px; }
+        .stats { flex-shrink: 0; padding: 9px 13px; background: #f0f4ff; border-top: 1px solid #dde0ff; font-size: 12px; color: #555; display: flex; gap: 14px; }
+        .stat span { font-weight: bold; color: #667eea; }
+        .restaurant-list::-webkit-scrollbar { width: 5px; }
+        .restaurant-list::-webkit-scrollbar-track { background: #f1f1f1; }
+        .restaurant-list::-webkit-scrollbar-thumb { background: #b0b8f8; border-radius: 10px; }
+
+        /* MOBILE */
+        @media (max-width: 850px) {
+            html, body { height: auto; overflow: auto; }
+            .container { flex-direction: column; height: auto; min-height: 100vh; }
+            .map-wrapper { position: sticky; top: 0; z-index: 500; height: 58vmax; max-height: 65vh; min-height: 280px; }
+            .sidebar { width: 100%; height: auto; overflow: visible; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+            .restaurant-list { overflow: visible; flex: none; height: auto; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="map-wrapper"><div id="map"></div></div>
+    <div class="sidebar">
+        <div class="sidebar-header">🍽️ Na nože — Reštaurácie SK</div>
+        <div class="sidebar-top">
+            <div class="filter-group">
+                <label for="seriesFilter">Filtrovať podľa série:</label>
+                <select id="seriesFilter">
+                    <option value="0">Všetky série (48 reštaurácií)</option>
+                    <option value="1">Séria 1 – 2023 · 8 reštaurácií</option>
+                    <option value="2">Séria 2 – 2023 · 8 reštaurácií</option>
+                    <option value="3">Séria 3 – 2024 · 8 reštaurácií</option>
+                    <option value="4">Séria 4 – 2025 · 16 reštaurácií</option>
+                    <option value="5">Séria 5 – 2026 · 8 reštaurácií</option>
+                </select>
+            </div>
+            <div class="legend">
+                <div class="legend-item" onclick="filterBySeries(1)"><div class="legend-dot" style="background:#e74c3c"></div>S1</div>
+                <div class="legend-item" onclick="filterBySeries(2)"><div class="legend-dot" style="background:#3498db"></div>S2</div>
+                <div class="legend-item" onclick="filterBySeries(3)"><div class="legend-dot" style="background:#2ecc71"></div>S3</div>
+                <div class="legend-item" onclick="filterBySeries(4)"><div class="legend-dot" style="background:#f39c12"></div>S4</div>
+                <div class="legend-item" onclick="filterBySeries(5)"><div class="legend-dot" style="background:#9b59b6"></div>S5</div>
+                <div class="legend-item" onclick="filterBySeries(0)" style="color:#667eea">✕ Všetky</div>
+            </div>
+        </div>
+        <div class="list-header">
+            <span>Reštaurácie</span>
+            <span class="list-count" id="listCount">47</span>
+        </div>
+        <div class="restaurant-list" id="restaurantList"></div>
+        <div class="stats">
+            <div class="stat">Celkom: <span>48</span></div>
+            <div class="stat">Zobrazované: <span id="displayedCount">47</span></div>
+            <div class="stat">Miest: <span id="citiesCount">34</span></div>
+        </div>
+    </div>
+</div>
+<script>
+// knives: počet nožov (null = neznáme)
+const restaurants = [
+    {"name":"Bella Italia","city":"Šamorín","address":"Cintorínska 563/3, 931 01 Šamorín","lat":48.0875,"lon":17.3922,"series":1,"episode":1,"knives":null},
+    {"name":"Hashtag Pub","city":"Ľubica","address":"Hlboká 1414, 059 71 Ľubica","lat":49.2939,"lon":20.3394,"series":1,"episode":2,"knives":null},
+    {"name":"Zlatý Mlyn","city":"Ludanice","address":"Pivovarská 495, 956 11 Ludanice","lat":48.3656,"lon":18.4856,"series":1,"episode":3,"knives":null},
+    {"name":"Penzión na Trojici","city":"Banská Štiavnica","address":"Nám. Sv. Trojice 17, Banská Štiavnica","lat":48.4581,"lon":18.8867,"series":1,"episode":4,"knives":null},
+    {"name":"Reštaurácia Záhrada","city":"Nitra","address":"Dlhá 846/89, Nitra","lat":48.3095,"lon":18.0894,"series":1,"episode":5,"knives":null},
+    {"name":"Reštaurácia Novohrad","city":"Lučenec","address":"Novohradská 322/27, 984 01 Lučenec","lat":48.3392,"lon":19.6556,"series":1,"episode":6,"knives":null},
+    {"name":"Plantáž Bistro","city":"Martin","address":"M. R. Štefánika 24a, 036 01 Martin","lat":49.0641,"lon":18.9306,"series":1,"episode":7,"knives":null},
+    {"name":"Dvor u Sedliaka","city":"Smolenice","address":"Železničná 1, 919 04 Smolenice","lat":48.5244,"lon":17.4806,"series":1,"episode":8,"knives":null},
+    {"name":"Motorest na Hôrke","city":"Hliník nad Hronom","address":"Priemyselná 41/7, 966 01 Hliník nad Hronom","lat":48.5011,"lon":18.7939,"series":2,"episode":1,"knives":null},
+    {"name":"The Bank","city":"Kolárovo","address":"Viktora Palkovicha 2600/34, 946 03 Kolárovo","lat":47.9189,"lon":17.9939,"series":2,"episode":2,"knives":null},
+    {"name":"Piti Piti Pa","city":"Košice","address":"Moldavská cesta 32, 040 11 Košice","lat":48.6947,"lon":21.2394,"series":2,"episode":3,"knives":null},
+    {"name":"Hotel Tulipán","city":"Tatranská Lomnica","address":"Tatranská Lomnica 63, 059 60 Tatranská Lomnica","lat":49.1653,"lon":20.2875,"series":2,"episode":4,"knives":null},
+    {"name":"U Zlatého Tanku","city":"Divina","address":"Divina 126, 013 31 Divina","lat":49.1406,"lon":18.6767,"series":2,"episode":5,"knives":null},
+    {"name":"Penzión Turista","city":"Banská Štiavnica","address":"Počúvadlianske jazero 81, 969 01 Banská Štiavnica","lat":48.4631,"lon":18.8917,"series":2,"episode":6,"knives":4},
+    {"name":"Penzión Anesis","city":"Turčianske Teplice","address":"Kúpeľná 689, 921 01 Turčianske Teplice","lat":48.8667,"lon":18.8642,"series":2,"episode":7,"knives":null},
+    {"name":"Staré časy","city":"Marianka","address":"Karpatská 4, 900 33 Marianka","lat":48.2636,"lon":17.0053,"series":2,"episode":8,"knives":null},
+    {"name":"Pizza Pub Tank","city":"Banská Bystrica","address":"Tulská 5359/37, 974 04 Banská Bystrica","lat":48.7372,"lon":19.1539,"series":3,"episode":1,"knives":3},
+    {"name":"Retro Burger & Dinner","city":"Prešov","address":"Masarykova 29, 080 01 Prešov","lat":49.0099,"lon":21.2401,"series":3,"episode":2,"knives":null},
+    {"name":"Mestská piváreň","city":"Humenné","address":"Humenné","lat":48.9383,"lon":21.9108,"series":3,"episode":3,"knives":null},
+    {"name":"Hostinec Raj","city":"Hrabušice","address":"Hrabušice 171, 053 15 Hrabušice","lat":48.9567,"lon":20.4128,"series":3,"episode":4,"knives":null},
+    {"name":"Stupavská Hodovňa","city":"Stupava","address":"Agátová 1095/5, 900 31 Stupava","lat":48.2706,"lon":17.0253,"series":3,"episode":5,"knives":null},
+    {"name":"California Pub","city":"Ružomberok","address":"Klačno 2129/2, 034 01 Ružomberok","lat":49.0733,"lon":19.3056,"series":3,"episode":6,"knives":null},
+    {"name":"VEG","city":"Poprad","address":"Nám. sv. Egídia 42/97, 058 01 Poprad","lat":49.0545,"lon":20.2945,"series":3,"episode":7,"knives":null},
+    {"name":"Pekidors","city":"Michal na Ostrove","address":"Michal na Ostrove 282, 930 35 Michal na Ostrove","lat":47.9278,"lon":17.4542,"series":3,"episode":8,"knives":null},
+    {"name":"Rybárska bašta / Brassérka","city":"Nitra","address":"Cintorínska 10, 949 01 Nitra","lat":48.3150,"lon":18.0944,"series":4,"episode":1,"knives":4},
+    {"name":"Bufet Jahodná","city":"Jahodná","address":"Jahodná","lat":48.7289,"lon":19.7261,"series":4,"episode":2,"knives":0},
+    {"name":"Yalla Habibi","city":"Banská Bystrica","address":"Dolná 134/1, 974 01 Banská Bystrica","lat":48.7422,"lon":19.1489,"series":4,"episode":3,"knives":4},
+    {"name":"Red Rose","city":"Raslavice","address":"Hlavná 325, 086 41 Raslavice","lat":49.2253,"lon":21.1358,"series":4,"episode":4,"knives":2},
+    {"name":"Chalúpka pod Hoľami","city":"Martin","address":"Martin","lat":49.0691,"lon":18.9256,"series":4,"episode":5,"knives":null},
+    {"name":"Heydučka","city":"Bratislava","address":"Korabinského 4, 811 03 Bratislava","lat":48.1486,"lon":17.1077,"series":4,"episode":6,"knives":2},
+    {"name":"Javorina Pub 21","city":"Košice-Šaca","address":"Javorinská 32, 040 15 Košice-Šaca","lat":48.6500,"lon":21.2200,"series":4,"episode":7,"knives":1},
+    {"name":"Veganaf","city":"Banská Bystrica","address":"Námestie slobody 22, 974 01 Banská Bystrica","lat":48.7322,"lon":19.1589,"series":4,"episode":8,"knives":3},
+    {"name":"Zoraya","city":"Rimavská Sobota","address":"Cukrovarská 5231/1H, 979 01 Rimavská Sobota","lat":48.3789,"lon":20.0189,"series":4,"episode":9,"knives":3},
+    {"name":"Koliba pod Vlkolíncom","city":"Ružomberok","address":"Korytnická cesta 7387/47, 034 04 Ružomberok","lat":49.0783,"lon":19.3006,"series":4,"episode":10,"knives":4},
+    {"name":"Pizza Italy","city":"Želiezovce","address":"Želiezovce","lat":48.0531,"lon":18.6636,"series":4,"episode":11,"knives":3},
+    {"name":"Tri Groše","city":"Ľubietová","address":"Ľubietová 67, 976 55 Ľubietová","lat":48.6906,"lon":19.4128,"series":4,"episode":12,"knives":5},
+    {"name":"Kotolňa Pub","city":"Rožňava","address":"Daxnerova 6, 048 01 Rožňava","lat":48.6586,"lon":20.5325,"series":4,"episode":13,"knives":2},
+    {"name":"Bayer Restaurant","city":"Košice","address":"Fejova 11, 040 01 Košice","lat":48.7214,"lon":21.2561,"series":4,"episode":14,"knives":3},
+    {"name":"Hostinec u Krivého Potoka","city":"Betliar","address":"Betliar","lat":48.7200,"lon":20.3900,"series":4,"episode":15,"knives":4},
+    {"name":"Reštaurácia u Katky","city":"Košice","address":"Budapeštianska 2, 040 13 Košice","lat":48.7114,"lon":21.2661,"series":4,"episode":16,"knives":4},
+    {"name":"Bonanza Ranč","city":"Skýcov","address":"Skýcov 1, 956 12 Skýcov","lat":48.5489,"lon":18.3117,"series":5,"episode":1,"knives":4},
+    {"name":"Mavi's","city":"Pezinok","address":"Pezinok","lat":48.2906,"lon":17.2667,"series":5,"episode":2,"knives":null},
+    {"name":"Bistro Zetko","city":"Vieska nad Žitavou","address":"Vieska nad Žitavou 238, 951 52 Vieska nad Žitavou","lat":48.2083,"lon":18.3256,"series":5,"episode":3,"knives":null},
+    {"name":"Smokehouse","city":"Košice","address":"Biela 259/3, 040 01 Košice","lat":48.7064,"lon":21.2711,"series":5,"episode":4,"knives":null},
+    {"name":"Restaurace Anděl","city":"Příbram","address":"nám. T. G. Masaryka 168, 261 01 Příbram, Česká republika","lat":49.6761,"lon":14.0217,"series":5,"episode":5,"knives":null},
+    {"name":"Sandorf","city":"Prievaly","address":"Prievaly, Trnavský kraj","lat":48.0467,"lon":17.4147,"series":5,"episode":6,"knives":null},
+    {"name":"Oravský Zrub","city":"Nižná (Orava)","address":"Farkašovského ulica 921, 027 43 Nižná","lat":49.3118,"lon":19.5310,"series":5,"episode":7,"knives":5},
+    {"name":"Pizza Família","city":"Slovenské Kľačany","address":"Slovenské Kľačany","lat":48.5722,"lon":18.1667,"series":5,"episode":8,"knives":2}
+];
+
+const seriesColors = {1:"#e74c3c", 2:"#3498db", 3:"#2ecc71", 4:"#f39c12", 5:"#9b59b6"};
+
+function knifeEmoji(n) {
+    if (n === null) return '';
+    const filled = "🔪".repeat(n);
+    return `<span style="letter-spacing:1px;">${filled}</span> <span style="color:#888;font-size:10px;">(${n}/5)</span>`;
+}
+
+const map = L.map("map").setView([48.7, 19.5], 7);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors", maxZoom: 19
+}).addTo(map);
+
+const allMarkers = restaurants.map((r, i) => {
+    const color = seriesColors[r.series];
+    // Popup - string concatenation (žiadne nested template literals)
+    const hasStreet = r.address && r.address !== r.city && /[0-9]/.test(r.address);
+    const fallbackCountry = (r.address && r.address.includes('Česká')) ? '' : ', Slovensko';
+    const addrLine = hasStreet
+        ? '<div>📌 ' + r.address + '</div>'
+        : '<div>📌 ' + r.city + fallbackCountry + '</div>';
+    const knivesLine = (r.knives !== null)
+        ? '<div style="margin-top:4px;">' + knifeEmoji(r.knives) + '</div>'
+        : '';
+    const popup = '<div style="padding:10px;max-width:240px;font-family:Arial,sans-serif;">'
+        + '<div style="font-weight:bold;font-size:14px;color:#222;margin-bottom:7px;">' + r.name + '</div>'
+        + '<div style="font-size:12px;color:#555;line-height:1.9;">'
+        + '<div>📍 ' + r.city + '</div>'
+        + addrLine
+        + knivesLine
+        + '<div style="margin-top:4px;font-weight:bold;color:' + color + ';">Séria ' + r.series + ' · Ep. ' + r.episode + '</div>'
+        + '</div></div>';
+    const marker = L.circleMarker([r.lat, r.lon], {
+        radius: 8, fillColor: color, color: "#fff", weight: 2, opacity: 1, fillOpacity: 0.85
+    }).bindPopup(popup);
+    marker.addTo(map);
+    // Klik na marker → highlight + scroll v liste
+    marker.on("click", () => highlightAndScroll(i));
+    return marker;
+});
+
+let activeIndex = null;
+
+function highlightAndScroll(i) {
+    // Zruš predchádzajúci highlight
+    if (activeIndex !== null) {
+        const prev = document.getElementById("item-" + activeIndex);
+        if (prev) prev.classList.remove("active");
+    }
+    activeIndex = i;
+    const el = document.getElementById("item-" + i);
+    if (el) {
+        el.classList.add("active");
+        el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+}
+
+function isMobile() { return window.innerWidth <= 850; }
+
+function zoomToRestaurant(i) {
+    const r = restaurants[i];
+    if (!map.hasLayer(allMarkers[i])) allMarkers[i].addTo(map);
+    highlightAndScroll(i);
+    if (isMobile()) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(() => {
+            map.setView([r.lat, r.lon], 8, { animate: true });
+            allMarkers[i].setRadius(14).bringToFront();
+            allMarkers[i].openPopup();
+            setTimeout(() => allMarkers[i].setRadius(8), 2500);
+        }, 500);
+    } else {
+        map.setView([r.lat, r.lon], 8, { animate: true });
+        allMarkers[i].setRadius(14).bringToFront();
+        allMarkers[i].openPopup();
+        setTimeout(() => allMarkers[i].setRadius(8), 2500);
+    }
+}
+
+function renderList(data) {
+    const listDiv = document.getElementById("restaurantList");
+    listDiv.innerHTML = "";
+    activeIndex = null;
+    data.forEach(r => {
+        const i = restaurants.indexOf(r);
+        const color = seriesColors[r.series];
+        const item = document.createElement("div");
+        item.className = "restaurant-item";
+        item.id = "item-" + i;
+        item.style.borderLeftColor = color;
+        item.innerHTML = `
+            <div class="r-name">${r.name}</div>
+            <div class="r-info">
+                <div>📍 ${r.city}</div>
+                ${r.knives !== null ? `<div class="r-knives">${knifeEmoji(r.knives)}</div>` : ""}
+                <div style="color:${color};font-weight:600;font-size:11px;margin-top:2px;">S${r.series} E${r.episode}</div>
+            </div>`;
+        item.addEventListener("click", () => zoomToRestaurant(i));
+        listDiv.appendChild(item);
+    });
+    const count = data.length;
+    document.getElementById("displayedCount").textContent = count;
+    document.getElementById("listCount").textContent = count;
+    document.getElementById("citiesCount").textContent = new Set(data.map(r => r.city)).size;
+}
+
+function applyFilter(sv) {
+    allMarkers.forEach((marker, i) => {
+        if (sv === 0 || restaurants[i].series === sv) {
+            if (!map.hasLayer(marker)) marker.addTo(map);
+        } else {
+            if (map.hasLayer(marker)) map.removeLayer(marker);
+        }
+    });
+    const filtered = sv === 0 ? restaurants : restaurants.filter(r => r.series === sv);
+    renderList(filtered);
+    if (filtered.length > 0) {
+        map.fitBounds(L.latLngBounds(filtered.map(r => [r.lat, r.lon])), { padding: [40, 40], maxZoom: 11 });
+    }
+}
+
+function filterBySeries(s) {
+    document.getElementById("seriesFilter").value = s;
+    applyFilter(s);
+    if (isMobile()) window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.getElementById("seriesFilter").addEventListener("change", function() {
+    applyFilter(parseInt(this.value));
+    if (isMobile()) window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+renderList(restaurants);
+</script>
+</body>
+</html>
