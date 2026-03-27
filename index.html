@@ -29,7 +29,6 @@
         .restaurant-list { flex: 1; overflow-y: auto; padding: 8px 10px; }
         .restaurant-item { padding: 9px 11px; background: #f8f9fa; border-left: 4px solid #667eea; border-radius: 5px; cursor: pointer; transition: all 0.15s; margin-bottom: 6px; }
         .restaurant-item:hover { background: #eef0ff; transform: translateX(4px); box-shadow: 0 2px 8px rgba(102,126,234,0.15); }
-        /* HIGHLIGHT pri kliknutí na marker */
         .restaurant-item.active { background: #fff8e1; border-left-color: #f39c12 !important; box-shadow: 0 2px 12px rgba(243,156,18,0.35); transform: translateX(4px); }
         .restaurant-item:last-child { margin-bottom: 0; }
         .r-name { font-weight: bold; color: #222; font-size: 13px; margin-bottom: 3px; }
@@ -40,8 +39,6 @@
         .restaurant-list::-webkit-scrollbar { width: 5px; }
         .restaurant-list::-webkit-scrollbar-track { background: #f1f1f1; }
         .restaurant-list::-webkit-scrollbar-thumb { background: #b0b8f8; border-radius: 10px; }
-
-        /* MOBILE */
         @media (max-width: 850px) {
             html, body { height: auto; overflow: auto; }
             .container { flex-direction: column; height: auto; min-height: 100vh; }
@@ -79,21 +76,22 @@
         </div>
         <div class="list-header">
             <span>Reštaurácie</span>
-            <span class="list-count" id="listCount">47</span>
+            <span class="list-count" id="listCount">48</span>
         </div>
         <div class="restaurant-list" id="restaurantList"></div>
         <div class="stats">
             <div class="stat">Celkom: <span>48</span></div>
-            <div class="stat">Zobrazované: <span id="displayedCount">47</span></div>
+            <div class="stat">Zobrazované: <span id="displayedCount">48</span></div>
             <div class="stat">Miest: <span id="citiesCount">34</span></div>
         </div>
     </div>
 </div>
 <script>
 // knives: počet nožov (null = neznáme)
+// GPS súradnice overené cez Nominatim/OSM – 2026-03-27
 const restaurants = [
-    {"name":"Bella Italia","city":"Šamorín","address":"Cintorínska 563/3, 931 01 Šamorín","lat":48.0875,"lon":17.3922,"series":1,"episode":1,"knives":null},
-    {"name":"Hashtag Pub","city":"Ľubica","address":"Hlboká 1414, 059 71 Ľubica","lat":49.2939,"lon":20.3394,"series":1,"episode":2,"knives":null},
+    {"name":"Bella Italia","city":"Šamorín","address":"Cintorínska 563/3, 931 01 Šamorín","lat":48.0276,"lon":17.3116,"series":1,"episode":1,"knives":null},
+    {"name":"Hashtag Pub","city":"Ľubica","address":"Hlboká 1414, 059 71 Ľubica","lat":49.1352,"lon":20.5242,"series":1,"episode":2,"knives":null},
     {"name":"Zlatý Mlyn","city":"Ludanice","address":"Pivovarská 495, 956 11 Ludanice","lat":48.3656,"lon":18.4856,"series":1,"episode":3,"knives":null},
     {"name":"Penzión na Trojici","city":"Banská Štiavnica","address":"Nám. Sv. Trojice 17, Banská Štiavnica","lat":48.4581,"lon":18.8867,"series":1,"episode":4,"knives":null},
     {"name":"Reštaurácia Záhrada","city":"Nitra","address":"Dlhá 846/89, Nitra","lat":48.3095,"lon":18.0894,"series":1,"episode":5,"knives":null},
@@ -117,12 +115,12 @@ const restaurants = [
     {"name":"VEG","city":"Poprad","address":"Nám. sv. Egídia 42/97, 058 01 Poprad","lat":49.0545,"lon":20.2945,"series":3,"episode":7,"knives":null},
     {"name":"Pekidors","city":"Michal na Ostrove","address":"Michal na Ostrove 282, 930 35 Michal na Ostrove","lat":47.9278,"lon":17.4542,"series":3,"episode":8,"knives":null},
     {"name":"Rybárska bašta / Brassérka","city":"Nitra","address":"Cintorínska 10, 949 01 Nitra","lat":48.3150,"lon":18.0944,"series":4,"episode":1,"knives":4},
-    {"name":"Bufet Jahodná","city":"Jahodná","address":"Jahodná","lat":48.7289,"lon":19.7261,"series":4,"episode":2,"knives":0},
+    {"name":"Bufet Jahodná","city":"Jahodná","address":"Jahodná","lat":48.3286,"lon":19.7849,"series":4,"episode":2,"knives":0},
     {"name":"Yalla Habibi","city":"Banská Bystrica","address":"Dolná 134/1, 974 01 Banská Bystrica","lat":48.7422,"lon":19.1489,"series":4,"episode":3,"knives":4},
     {"name":"Red Rose","city":"Raslavice","address":"Hlavná 325, 086 41 Raslavice","lat":49.2253,"lon":21.1358,"series":4,"episode":4,"knives":2},
     {"name":"Chalúpka pod Hoľami","city":"Martin","address":"Martin","lat":49.0691,"lon":18.9256,"series":4,"episode":5,"knives":null},
-    {"name":"Heydučka","city":"Bratislava","address":"Korabinského 4, 811 03 Bratislava","lat":48.1486,"lon":17.1077,"series":4,"episode":6,"knives":2},
-    {"name":"Javorina Pub 21","city":"Košice-Šaca","address":"Javorinská 32, 040 15 Košice-Šaca","lat":48.6500,"lon":21.2200,"series":4,"episode":7,"knives":1},
+    {"name":"Heydučka","city":"Bratislava","address":"Korabinského 4, 811 03 Bratislava","lat":48.1543,"lon":17.0845,"series":4,"episode":6,"knives":2},
+    {"name":"Javorina Pub 21","city":"Košice-Šaca","address":"Javorinská 32, 040 15 Košice-Šaca","lat":48.6318,"lon":21.1712,"series":4,"episode":7,"knives":1},
     {"name":"Veganaf","city":"Banská Bystrica","address":"Námestie slobody 22, 974 01 Banská Bystrica","lat":48.7322,"lon":19.1589,"series":4,"episode":8,"knives":3},
     {"name":"Zoraya","city":"Rimavská Sobota","address":"Cukrovarská 5231/1H, 979 01 Rimavská Sobota","lat":48.3789,"lon":20.0189,"series":4,"episode":9,"knives":3},
     {"name":"Koliba pod Vlkolíncom","city":"Ružomberok","address":"Korytnická cesta 7387/47, 034 04 Ružomberok","lat":49.0783,"lon":19.3006,"series":4,"episode":10,"knives":4},
@@ -132,14 +130,14 @@ const restaurants = [
     {"name":"Bayer Restaurant","city":"Košice","address":"Fejova 11, 040 01 Košice","lat":48.7214,"lon":21.2561,"series":4,"episode":14,"knives":3},
     {"name":"Hostinec u Krivého Potoka","city":"Betliar","address":"Betliar","lat":48.7200,"lon":20.3900,"series":4,"episode":15,"knives":4},
     {"name":"Reštaurácia u Katky","city":"Košice","address":"Budapeštianska 2, 040 13 Košice","lat":48.7114,"lon":21.2661,"series":4,"episode":16,"knives":4},
-    {"name":"Bonanza Ranč","city":"Skýcov","address":"Skýcov 1, 956 12 Skýcov","lat":48.5489,"lon":18.3117,"series":5,"episode":1,"knives":4},
+    {"name":"Bonanza Ranč","city":"Skýcov","address":"Skýcov 1, 956 12 Skýcov","lat":48.5042,"lon":18.4199,"series":5,"episode":1,"knives":4},
     {"name":"Mavi's","city":"Pezinok","address":"Pezinok","lat":48.2906,"lon":17.2667,"series":5,"episode":2,"knives":null},
     {"name":"Bistro Zetko","city":"Vieska nad Žitavou","address":"Vieska nad Žitavou 238, 951 52 Vieska nad Žitavou","lat":48.2083,"lon":18.3256,"series":5,"episode":3,"knives":null},
     {"name":"Smokehouse","city":"Košice","address":"Biela 259/3, 040 01 Košice","lat":48.7064,"lon":21.2711,"series":5,"episode":4,"knives":null},
-    {"name":"Restaurace Anděl","city":"Příbram","address":"nám. T. G. Masaryka 168, 261 01 Příbram, Česká republika","lat":49.6761,"lon":14.0217,"series":5,"episode":5,"knives":null},
-    {"name":"Sandorf","city":"Prievaly","address":"Prievaly, Trnavský kraj","lat":48.0467,"lon":17.4147,"series":5,"episode":6,"knives":null},
+    {"name":"Restaurace Anděl","city":"Příbram","address":"nám. T. G. Masaryka 168, 261 01 Příbram, Česká republika","lat":49.6889,"lon":14.0097,"series":5,"episode":5,"knives":null},
+    {"name":"Sandorf","city":"Prievaly","address":"Prievaly, Trnavský kraj","lat":48.5640,"lon":17.3434,"series":5,"episode":6,"knives":null},
     {"name":"Oravský Zrub","city":"Nižná (Orava)","address":"Farkašovského ulica 921, 027 43 Nižná","lat":49.3118,"lon":19.5310,"series":5,"episode":7,"knives":5},
-    {"name":"Pizza Família","city":"Slovenské Kľačany","address":"Slovenské Kľačany","lat":48.5722,"lon":18.1667,"series":5,"episode":8,"knives":2}
+    {"name":"Pizza Família","city":"Slovenské Kľačany","address":"Slovenské Kľačany","lat":48.2635,"lon":19.4491,"series":5,"episode":8,"knives":2}
 ];
 
 const seriesColors = {1:"#e74c3c", 2:"#3498db", 3:"#2ecc71", 4:"#f39c12", 5:"#9b59b6"};
@@ -147,7 +145,7 @@ const seriesColors = {1:"#e74c3c", 2:"#3498db", 3:"#2ecc71", 4:"#f39c12", 5:"#9b
 function knifeEmoji(n) {
     if (n === null) return '';
     const filled = "🔪".repeat(n);
-    return `<span style="letter-spacing:1px;">${filled}</span> <span style="color:#888;font-size:10px;">(${n}/5)</span>`;
+    return '<span style="letter-spacing:1px;">' + filled + '</span> <span style="color:#888;font-size:10px;">(' + n + '/5)</span>';
 }
 
 const map = L.map("map").setView([48.7, 19.5], 7);
@@ -157,7 +155,6 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 const allMarkers = restaurants.map((r, i) => {
     const color = seriesColors[r.series];
-    // Popup - string concatenation (žiadne nested template literals)
     const hasStreet = r.address && r.address !== r.city && /[0-9]/.test(r.address);
     const fallbackCountry = (r.address && r.address.includes('Česká')) ? '' : ', Slovensko';
     const addrLine = hasStreet
@@ -178,7 +175,6 @@ const allMarkers = restaurants.map((r, i) => {
         radius: 8, fillColor: color, color: "#fff", weight: 2, opacity: 1, fillOpacity: 0.85
     }).bindPopup(popup);
     marker.addTo(map);
-    // Klik na marker → highlight + scroll v liste
     marker.on("click", () => highlightAndScroll(i));
     return marker;
 });
@@ -186,7 +182,6 @@ const allMarkers = restaurants.map((r, i) => {
 let activeIndex = null;
 
 function highlightAndScroll(i) {
-    // Zruš predchádzajúci highlight
     if (activeIndex !== null) {
         const prev = document.getElementById("item-" + activeIndex);
         if (prev) prev.classList.remove("active");
@@ -232,13 +227,13 @@ function renderList(data) {
         item.className = "restaurant-item";
         item.id = "item-" + i;
         item.style.borderLeftColor = color;
-        item.innerHTML = `
-            <div class="r-name">${r.name}</div>
-            <div class="r-info">
-                <div>📍 ${r.city}</div>
-                ${r.knives !== null ? `<div class="r-knives">${knifeEmoji(r.knives)}</div>` : ""}
-                <div style="color:${color};font-weight:600;font-size:11px;margin-top:2px;">S${r.series} E${r.episode}</div>
-            </div>`;
+        const knivesHtml = r.knives !== null ? '<div class="r-knives">' + knifeEmoji(r.knives) + '</div>' : '';
+        item.innerHTML = '<div class="r-name">' + r.name + '</div>'
+            + '<div class="r-info">'
+            + '<div>📍 ' + r.city + '</div>'
+            + knivesHtml
+            + '<div style="color:' + color + ';font-weight:600;font-size:11px;margin-top:2px;">S' + r.series + ' E' + r.episode + '</div>'
+            + '</div>';
         item.addEventListener("click", () => zoomToRestaurant(i));
         listDiv.appendChild(item);
     });
