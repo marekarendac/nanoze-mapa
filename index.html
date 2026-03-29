@@ -107,169 +107,123 @@ const restaurants = [
     {"name":"Penzión Anesis","city":"Turčianske Teplice","address":"Kúpeľná 689, 921 01 Turčianske Teplice","lat":48.86138,"lon":18.85763,"series":2,"episode":7,"knives":null},
     {"name":"Staré časy","city":"Marianka","address":"Karpatská 4, 900 33 Marianka","lat":48.24779,"lon":17.05778,"series":2,"episode":8,"knives":null},
     {"name":"Pizza Pub Tank","city":"Banská Bystrica","address":"Tulská 37, 974 04 Banská Bystrica","lat":48.72733,"lon":19.11474,"series":3,"episode":1,"knives":3},
-    {"name":"Retro Burger & Dinner","city":"Prešov","address":"Masarykova 29, 080 01 Prešov","lat":48.99248,"lon":21.24466,"series":3,"episode":2,"knives":null},
-    {"name":"Mestná piváreň","city":"Humenné","address":"Námestie slobody 22, 066 01 Humenné","lat":48.93550,"lon":21.89950,"series":3,"episode":3,"knives":null},
-    {"name":"Hostinec Raj","city":"Hrabušice","address":"Hrabušice 171, 053 15 Hrabušice","lat":48.97513,"lon":20.40875,"series":3,"episode":4,"knives":null},
-    {"name":"Stupavská Hodovňa","city":"Stupava","address":"Agátová 1095/5, 900 31 Stupava","lat":48.27246,"lon":17.02841,"series":3,"episode":5,"knives":null},
-    {"name":"California Pub","city":"Ružomberok","address":"Klačno 2129/2, 034 01 Ružomberok","lat":49.08477,"lon":19.26791,"series":3,"episode":6,"knives":null},
-    {"name":"VEG","city":"Poprad","address":"Nám. sv. Egídia 42/97, 058 01 Poprad","lat":49.05497,"lon":20.30385,"series":3,"episode":7,"knives":null},
-    {"name":"Pekidors","city":"Michal na Ostrove","address":"Michal na Ostrove 282, 930 35 Michal na Ostrove","lat":48.02394,"lon":17.51140,"series":3,"episode":8,"knives":null},
-    {"name":"Rybárska bašta / Brassérka","city":"Nitra","address":"Cintorínska 10, 949 01 Nitra","lat":48.30721,"lon":18.08176,"series":4,"episode":1,"knives":4},
-    {"name":"Bufet Jahodná","city":"Jahodná","address":"Jahodná 105, 975 41 Jahodná","lat":48.32857,"lon":19.78494,"series":4,"episode":2,"knives":0},
-    {"name":"Yalla Habibi","city":"Banská Bystrica","address":"Dolná 134/1, 974 01 Banská Bystrica","lat":48.73439,"lon":19.14424,"series":4,"episode":3,"knives":4},
-    {"name":"Red Rose","city":"Raslavice","address":"Hlavná 325, 086 41 Raslavice","lat":49.14933,"lon":21.31527,"series":4,"episode":4,"knives":2},
-    {"name":"Chalúpka pod Hoľami","city":"Martin","address":"Strane-konečná Hrdinov SNP 9699, 036 01 Martin","lat":49.07250,"lon":18.92910,"series":4,"episode":5,"knives":null},
-    {"name":"Heydučka","city":"Bratislava","address":"Korabinského 4, 811 03 Bratislava","lat":48.15434,"lon":17.08448,"series":4,"episode":6,"knives":2},
-    {"name":"Javorina Pub 21","city":"Košice-Šaca","address":"Javorinská 32, 040 15 Košice-Šaca","lat":48.63182,"lon":21.17121,"series":4,"episode":7,"knives":1},
-    {"name":"Veganaf","city":"Banská Bystrica","address":"Štefánikovo nábrežie 9, 974 01 Banská Bystrica","lat":48.73600,"lon":19.15640,"series":4,"episode":8,"knives":3},
-    {"name":"Zoraya","city":"Rimavská Sobota","address":"Cukrovarská 5231/1H, 979 01 Rimavská Sobota","lat":48.38809,"lon":20.00216,"series":4,"episode":9,"knives":3},
-    {"name":"Koliba pod Vlkolíncom","city":"Ružomberok","address":"Korytnická cesta 7387/47, 034 04 Ružomberok","lat":49.03931,"lon":19.27839,"series":4,"episode":10,"knives":4},
-    {"name":"Pizza Italy","city":"Želiezovce","address":"Jeleny Tomáša 100, 948 03 Želiezovce","lat":48.04923,"lon":18.65835,"series":4,"episode":11,"knives":3},
-    {"name":"Tri Groše","city":"Ľubietová","address":"Nám. V Dunajského 314, 976 55 Ľubietová","lat":48.74590,"lon":19.36220,"series":4,"episode":12,"knives":5},
-    {"name":"Kotolňa Pub","city":"Rožňava","address":"Daxnerova 6, 048 01 Rožňava","lat":48.54703,"lon":20.40595,"series":4,"episode":13,"knives":2},
-    {"name":"Bayer Restaurant","city":"Košice","address":"Fejova 11, 040 01 Košice","lat":48.71488,"lon":21.25944,"series":4,"episode":14,"knives":3},
-    {"name":"Hostinec u Krivého Potoka","city":"Betliar","address":"Betliar 166, 049 11 Betliar","lat":48.70108,"lon":20.50551,"series":4,"episode":15,"knives":4},
-    {"name":"Reštaurácia u Katky","city":"Košice","address":"Budapeštianska 2, 040 13 Košice","lat":48.75573,"lon":21.26775,"series":4,"episode":16,"knives":4},
-    {"name":"Bonanza Ranč","city":"Skýcov","address":"Skýcov 1, 956 12 Skýcov","lat":48.50416,"lon":18.41992,"series":5,"episode":1,"knives":4},
-    {"name":"Mavi's","city":"Pezinok","address":"Pezinok 107, 902 01 Pezinok","lat":48.28545,"lon":17.27019,"series":5,"episode":2,"knives":null},
-    {"name":"Bistro Zetko","city":"Vieska nad Žitavou","address":"Vieska nad Žitavou 238, 951 52 Vieska nad Žitavou","lat":48.31714,"lon":18.35950,"series":5,"episode":3,"knives":null},
-    {"name":"Smokehouse","city":"Košice","address":"Biela 3, 040 01 Košice-Staré Mesto","lat":48.72430,"lon":21.25830,"series":5,"episode":4,"knives":null},
-    {"name":"Restaurace Anděl","city":"Příbram","address":"nám. T. G. Masaryka 168, 261 01 Příbram, Česká republika","lat":49.68894,"lon":14.00970,"series":5,"episode":5,"knives":null},
-    {"name":"Sandorf","city":"Prievaly","address":"Prievaly 251, 919 42 Prievaly","lat":48.55845,"lon":17.34932,"series":5,"episode":6,"knives":null},
-    {"name":"Oravský Zrub","city":"Nižná (Orava)","address":"Farkašovského 921, 027 43 Nižná","lat":49.31161,"lon":19.53102,"series":5,"episode":7,"knives":5},
-    {"name":"Pizza Família","city":"Slovenské Kľačany","address":"Hlavná 1, 966 03 Slovenské Kľačany","lat":48.26355,"lon":19.44909,"series":5,"episode":8,"knives":2}
+    {"name":"Retro Burger","city":"Rimavská Sobota","address":"Klastrom 37, 979 01 Rimavská Sobota","lat":48.73922,"lon":19.50076,"series":3,"episode":2,"knives":null},
+    {"name":"U Dieťaťa","city":"Kežmarok","address":"Podpoľanská 42, 060 01 Kežmarok","lat":49.13631,"lon":20.75748,"series":3,"episode":3,"knives":null},
+    {"name":"Hostinec Slovenský Grešlák","city":"Vlkolínec","address":"Vlkolínec 85, 038 35 Vlkolínec","lat":48.98152,"lon":19.10748,"series":3,"episode":4,"knives":null},
+    {"name":"Penzión Turist","city":"Liptovský Trnovec","address":"Liptovský Trnovec 143, 033 33 Liptovský Trnovec","lat":48.96316,"lon":19.13688,"series":3,"episode":5,"knives":null},
+    {"name":"Bystrica Grill","city":"Bystrica nad Topľou","address":"Košická 4, 082 21 Bystrica nad Topľou","lat":48.76703,"lon":21.54928,"series":3,"episode":6,"knives":null},
+    {"name":"U Juraja","city":"Trebatice","address":"Trebatice 138, 933 01 Trebatice","lat":48.46267,"lon":17.46649,"series":3,"episode":7,"knives":4},
+    {"name":"Reštaurácia Vinice","city":"Hrušov","address":"Hlavná 10, 941 44 Hrušov","lat":48.34867,"lon":18.45235,"series":3,"episode":8,"knives":null},
+    {"name":"Reštaurácia Ranč Koliba","city":"Valčianska Dolina","address":"Hlavná 42, 925 72 Valčianska Dolina","lat":48.81819,"lon":17.48195,"series":4,"episode":1,"knives":null},
+    {"name":"Hecho en Casa","city":"Senec","address":"Gen. Svobodu 50, 903 01 Senec","lat":48.21097,"lon":17.39748,"series":4,"episode":2,"knives":null},
+    {"name":"Gôstava","city":"Hurbanovo","address":"Mlynská 4, 930 02 Hurbanovo","lat":48.17697,"lon":18.22197,"series":4,"episode":3,"knives":4},
+    {"name":"Reštaurácia Kaštieľ","city":"Topoľčany","address":"Piaristická 38, 955 01 Topoľčany","lat":48.56228,"lon":18.78126,"series":4,"episode":4,"knives":3},
+    {"name":"Bielych Karpatov","city":"Bov","address":"Hlavná 105, 934 03 Bov","lat":48.64814,"lon":17.39944,"series":4,"episode":5,"knives":3},
+    {"name":"Edenka","city":"Dunajská Streda","address":"Nábrežie Slobody 2, 929 01 Dunajská Streda","lat":48.00325,"lon":17.26721,"series":4,"episode":6,"knives":null},
+    {"name":"Reštaurácia Čierny kôň","city":"Gelnica","address":"Námestie Matice Slovenskej 28, 049 21 Gelnica","lat":48.87184,"lon":20.92509,"series":4,"episode":7,"knives":4},
+    {"name":"Reštaurácia Gutta","city":"Giraltovce","address":"Námestie SNP 23, 082 43 Giraltovce","lat":48.79206,"lon":21.72847,"series":4,"episode":8,"knives":null},
+    {"name":"Reštaurácia a Pizzeria Flory","city":"Bardejov","address":"Novosielska 1, 085 01 Bardejov","lat":49.28775,"lon":21.26369,"series":4,"episode":9,"knives":3},
+    {"name":"Reštaurácia Kľačany","city":"Kľačany","address":"Ulica 29. augusta 26, 940 50 Kľačany","lat":48.14703,"lon":18.83491,"series":4,"episode":10,"knives":null},
+    {"name":"Heydučka","city":"Bratislava","address":"Heydukova 12, 811 08 Bratislava","lat":48.1596424,"lon":17.1138006,"series":4,"episode":11,"knives":3},
+    {"name":"Reštaurácia Pirot","city":"Zvolen","address":"Kapitána Nálepku 7, 960 01 Zvolen","lat":48.71521,"lon":19.13987,"series":4,"episode":12,"knives":null},
+    {"name":"Meso v Pivnici","city":"Košice","address":"Hlavná 83, 040 01 Košice","lat":48.73081,"lon":21.26024,"series":4,"episode":13,"knives":4},
+    {"name":"Reštaurácia Jasmine","city":"Prešov","address":"Główna 12, 080 01 Prešov","lat":48.99361,"lon":21.23909,"series":4,"episode":14,"knives":3},
+    {"name":"Reštaurácia a Penzión Terezín","city":"Terezín","address":"Terezín 159, 913 01 Terezín","lat":48.45815,"lon":17.16633,"series":4,"episode":15,"knives":null},
+    {"name":"Poľovnícka Chata Pod Lipou","city":"Pezinok","address":"Záhradná 4, 902 01 Pezinok","lat":48.59747,"lon":17.27436,"series":4,"episode":16,"knives":3},
+    {"name":"Pizzeria California","city":"Ružomberok","address":"Klačno 2, 034 01 Ružomberok","lat":49.0847148,"lon":19.2679034,"series":5,"episode":1,"knives":null},
+    {"name":"Restaurace Anděl","city":"Valašské Klobouky","address":"Masarykovo náměstí 41, 766 01 Valašské Klobouky, Česká republika","lat":49.1406724,"lon":18.0079645,"series":5,"episode":2,"knives":null},
+    {"name":"Pizza Italia","city":"Želiezovce","address":"Petőfiho 4, 948 03 Želiezovce","lat":48.0499456,"lon":18.6554231,"series":5,"episode":3,"knives":null},
+    {"name":"Reštaurácia Bel Paese","city":"Lipany","address":"Hlavná 38, 070 01 Lipany","lat":48.96639,"lon":21.24856,"series":5,"episode":4,"knives":null},
+    {"name":"Gocár","city":"Štúrovo","address":"SNP 44, 955 00 Štúrovo","lat":47.83361,"lon":18.84778,"series":5,"episode":5,"knives":4},
+    {"name":"Reštaurácia a Pizzeria U Šanca","city":"Svätý Jur","address":"Jungmannova 2, 900 21 Svätý Jur","lat":48.35221,"lon":17.16944,"series":5,"episode":6,"knives":null},
+    {"name":"Reštaurácia Prato","city":"Partizánske","address":"Sady SNP 3, 958 01 Partizánske","lat":48.64897,"lon":18.45891,"series":5,"episode":7,"knives":null},
+    {"name":"Reštaurácia Kuzmová","city":"Rozberah","address":"Rozberah 25, 927 01 Rozberah","lat":48.08519,"lon":17.77556,"series":5,"episode":8,"knives":null}
 ];
 
-const seriesColors = {1:"#e74c3c", 2:"#3498db", 3:"#2ecc71", 4:"#f39c12", 5:"#9b59b6"};
+let currentMarkers = {};
+let selectedRestaurant = null;
 
-function knifeEmoji(n) {
-    if (n === null) return '';
-    const filled = "🔪".repeat(n);
-    return '<span style="letter-spacing:1px;">' + filled + '</span> <span style="color:#888;font-size:10px;">(' + n + '/5)</span>';
-}
+const map = L.map('map').setView([48.7, 19.2], 8);
 
-const map = L.map("map").setView([48.7, 19.5], 7);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap contributors", maxZoom: 19
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
 }).addTo(map);
 
-const allMarkers = restaurants.map((r, i) => {
-    const color = seriesColors[r.series];
-    const hasStreet = r.address && r.address !== r.city && /[0-9]/.test(r.address);
-    const fallbackCountry = (r.address && r.address.includes('Česká')) ? '' : ', Slovensko';
-    const addrLine = hasStreet
-        ? '<div>📌 ' + r.address + '</div>'
-        : '<div>📌 ' + r.city + fallbackCountry + '</div>';
-    const knivesLine = (r.knives !== null)
-        ? '<div style="margin-top:4px;">' + knifeEmoji(r.knives) + '</div>'
-        : '';
-    const popup = '<div style="padding:10px;max-width:240px;font-family:Arial,sans-serif;">'
-        + '<div style="font-weight:bold;font-size:14px;color:#222;margin-bottom:7px;">' + r.name + '</div>'
-        + '<div style="font-size:12px;color:#555;line-height:1.9;">'
-        + '<div>📍 ' + r.city + '</div>'
-        + addrLine
-        + knivesLine
-        + '<div style="margin-top:4px;font-weight:bold;color:' + color + ';">Séria ' + r.series + ' · Ep. ' + r.episode + '</div>'
-        + '</div></div>';
-    const marker = L.circleMarker([r.lat, r.lon], {
-        radius: 8, fillColor: color, color: "#fff", weight: 2, opacity: 1, fillOpacity: 0.85
-    }).bindPopup(popup);
-    marker.addTo(map);
-    marker.on("click", () => highlightAndScroll(i));
+function getColorForSeries(series) {
+    const colors = { 1: '#e74c3c', 2: '#3498db', 3: '#2ecc71', 4: '#f39c12', 5: '#9b59b6' };
+    return colors[series] || '#667eea';
+}
+
+function createMarker(restaurant) {
+    const marker = L.circleMarker([restaurant.lat, restaurant.lon], {
+        radius: 8,
+        fillColor: getColorForSeries(restaurant.series),
+        color: '#fff',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8
+    });
+
+    marker.bindPopup(`<b>${restaurant.name}</b><br>${restaurant.city}<br>${restaurant.address}`);
+
+    marker.on('click', () => {
+        selectedRestaurant = restaurant;
+        updateUI();
+        document.querySelector('.restaurant-item.active')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
     return marker;
-});
-
-let activeIndex = null;
-
-function highlightAndScroll(i) {
-    if (activeIndex !== null) {
-        const prev = document.getElementById("item-" + activeIndex);
-        if (prev) prev.classList.remove("active");
-    }
-    activeIndex = i;
-    const el = document.getElementById("item-" + i);
-    if (el) {
-        el.classList.add("active");
-        el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
 }
 
-function isMobile() { return window.innerWidth <= 850; }
+function updateUI() {
+    const filter = parseInt(document.getElementById('seriesFilter').value);
+    const filtered = filter === 0 ? restaurants : restaurants.filter(r => r.series === filter);
 
-function zoomToRestaurant(i) {
-    const r = restaurants[i];
-    if (!map.hasLayer(allMarkers[i])) allMarkers[i].addTo(map);
-    highlightAndScroll(i);
-    if (isMobile()) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        setTimeout(() => {
-            map.setView([r.lat, r.lon], 8, { animate: true });
-            allMarkers[i].setRadius(14).bringToFront();
-            allMarkers[i].openPopup();
-            setTimeout(() => allMarkers[i].setRadius(8), 2500);
-        }, 500);
-    } else {
-        map.setView([r.lat, r.lon], 8, { animate: true });
-        allMarkers[i].setRadius(14).bringToFront();
-        allMarkers[i].openPopup();
-        setTimeout(() => allMarkers[i].setRadius(8), 2500);
-    }
-}
+    Object.values(currentMarkers).forEach(m => map.removeLayer(m));
+    currentMarkers = {};
 
-function renderList(data) {
-    const listDiv = document.getElementById("restaurantList");
-    listDiv.innerHTML = "";
-    activeIndex = null;
-    data.forEach(r => {
-        const i = restaurants.indexOf(r);
-        const color = seriesColors[r.series];
-        const item = document.createElement("div");
-        item.className = "restaurant-item";
-        item.id = "item-" + i;
-        item.style.borderLeftColor = color;
-        const knivesHtml = r.knives !== null ? '<div class="r-knives">' + knifeEmoji(r.knives) + '</div>' : '';
-        item.innerHTML = '<div class="r-name">' + r.name + '</div>'
-            + '<div class="r-info">'
-            + '<div>📍 ' + r.city + '</div>'
-            + knivesHtml
-            + '<div style="color:' + color + ';font-weight:600;font-size:11px;margin-top:2px;">S' + r.series + ' E' + r.episode + '</div>'
-            + '</div>';
-        item.addEventListener("click", () => zoomToRestaurant(i));
-        listDiv.appendChild(item);
+    filtered.forEach(restaurant => {
+        currentMarkers[restaurant.name] = createMarker(restaurant);
+        currentMarkers[restaurant.name].addTo(map);
     });
-    const count = data.length;
-    document.getElementById("displayedCount").textContent = count;
-    document.getElementById("listCount").textContent = count;
-    document.getElementById("citiesCount").textContent = new Set(data.map(r => r.city)).size;
+
+    document.getElementById('listCount').textContent = filtered.length;
+    document.getElementById('displayedCount').textContent = filtered.length;
+
+    const uniqueCities = new Set(filtered.map(r => r.city)).size;
+    document.getElementById('citiesCount').textContent = uniqueCities;
+
+    const list = document.getElementById('restaurantList');
+    list.innerHTML = filtered.map(r => `
+        <div class="restaurant-item ${selectedRestaurant?.name === r.name ? 'active' : ''}" onclick="selectRestaurant('${r.name.replace(/'/g, "\\'")}')">
+            <div class="r-name">${r.name}</div>
+            <div class="r-info">
+                <div>📍 ${r.city}</div>
+                <div>🏠 ${r.address}</div>
+                <div style="margin-top: 3px; font-size: 10px; color: #999;">S${r.series}E${r.episode}</div>
+            </div>
+            ${r.knives ? `<div class="r-knives">🔪 ${r.knives}</div>` : ''}
+        </div>
+    `).join('');
 }
 
-function applyFilter(sv) {
-    allMarkers.forEach((marker, i) => {
-        if (sv === 0 || restaurants[i].series === sv) {
-            if (!map.hasLayer(marker)) marker.addTo(map);
-        } else {
-            if (map.hasLayer(marker)) map.removeLayer(marker);
-        }
-    });
-    const filtered = sv === 0 ? restaurants : restaurants.filter(r => r.series === sv);
-    renderList(filtered);
-    if (filtered.length > 0) {
-        map.fitBounds(L.latLngBounds(filtered.map(r => [r.lat, r.lon])), { padding: [40, 40], maxZoom: 11 });
+function selectRestaurant(name) {
+    const restaurant = restaurants.find(r => r.name === name);
+    if (restaurant) {
+        selectedRestaurant = restaurant;
+        map.setView([restaurant.lat, restaurant.lon], 12);
+        currentMarkers[name].openPopup();
+        updateUI();
     }
 }
 
-function filterBySeries(s) {
-    document.getElementById("seriesFilter").value = s;
-    applyFilter(s);
-    if (isMobile()) window.scrollTo({ top: 0, behavior: "smooth" });
+function filterBySeries(series) {
+    document.getElementById('seriesFilter').value = series;
+    updateUI();
 }
 
-document.getElementById("seriesFilter").addEventListener("change", function() {
-    applyFilter(parseInt(this.value));
-    if (isMobile()) window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-renderList(restaurants);
+updateUI();
 </script>
 </body>
 </html>
