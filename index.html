@@ -57,32 +57,38 @@
             <div class="filter-group">
                 <label for="seriesFilter">Filtrovať podľa série:</label>
                 <select id="seriesFilter">
-                    <option value="0">Všetky série (16 reštaurácií)</option>
+                    <option value="0">Všetky série (24 reštaurácií)</option>
                     <option value="1">Séria 1 – 2023 · 8 reštaurácií</option>
                     <option value="2">Séria 2 – 2023 · 8 reštaurácií</option>
+                    <option value="3">Séria 3 – 2024 · 4 reštaurácie</option>
+                    <option value="4">Séria 4 – 2025 · 3 reštaurácie</option>
+                    <option value="5">Séria 5 – 2026 · 1 reštaurácia</option>
                 </select>
             </div>
             <div class="legend">
                 <div class="legend-item" onclick="filterBySeries(1)"><div class="legend-dot" style="background:#e74c3c"></div>S1</div>
                 <div class="legend-item" onclick="filterBySeries(2)"><div class="legend-dot" style="background:#3498db"></div>S2</div>
+                <div class="legend-item" onclick="filterBySeries(3)"><div class="legend-dot" style="background:#2ecc71"></div>S3</div>
+                <div class="legend-item" onclick="filterBySeries(4)"><div class="legend-dot" style="background:#f39c12"></div>S4</div>
+                <div class="legend-item" onclick="filterBySeries(5)"><div class="legend-dot" style="background:#9b59b6"></div>S5</div>
                 <div class="legend-item" onclick="filterBySeries(0)" style="color:#667eea">✕ Všetky</div>
             </div>
         </div>
         <div class="list-header">
             <span>Reštaurácie</span>
-            <span class="list-count" id="listCount">16</span>
+            <span class="list-count" id="listCount">24</span>
         </div>
         <div class="restaurant-list" id="restaurantList"></div>
         <div class="stats">
-            <div class="stat">Celkom: <span>16</span></div>
-            <div class="stat">Zobrazované: <span id="displayedCount">16</span></div>
-            <div class="stat">Miest: <span id="citiesCount">16</span></div>
+            <div class="stat">Celkom: <span>24</span></div>
+            <div class="stat">Zobrazované: <span id="displayedCount">24</span></div>
+            <div class="stat">Miest: <span id="citiesCount">24</span></div>
         </div>
     </div>
 </div>
 <script>
 // knives: počet nožov (null = neznáme)
-// Sú ponechané len epizódy, pri ktorých sa dá jednoznačne overiť, že boli v relácii Na nože (S1 a S2).
+// Zoznam reštaurácií overený podľa oficiálneho zoznamu epizód Na nože (Wikipédia) a externých zdrojov; súradnice z mapových služieb (OSM/mapy.com a pod.)
 const restaurants = [
     {"name":"Bella Italia","city":"Šamorín","address":"Cintorínska 3, 931 01 Šamorín","lat":48.02670,"lon":17.31190,"series":1,"episode":1,"knives":null},
     {"name":"Hashtag Pub","city":"Ľubica","address":"Hlboká 1414, 059 71 Ľubica","lat":49.12420,"lon":20.44050,"series":1,"episode":2,"knives":null},
@@ -99,7 +105,15 @@ const restaurants = [
     {"name":"U Zlatého Tanku","city":"Divina","address":"Divina 126, 013 31 Divina","lat":49.27146,"lon":18.69572,"series":2,"episode":5,"knives":null},
     {"name":"Penzión Turista","city":"Banská Štiavnica","address":"Počúvadlianske jazero 81, 969 01 Banská Štiavnica","lat":48.40769,"lon":18.85438,"series":2,"episode":6,"knives":4},
     {"name":"Penzión Anesis","city":"Turčianske Teplice","address":"Kúpeľná 689, 921 01 Turčianske Teplice","lat":48.86138,"lon":18.85763,"series":2,"episode":7,"knives":null},
-    {"name":"Staré časy","city":"Marianka","address":"Karpatská 4, 900 33 Marianka","lat":48.24779,"lon":17.05778,"series":2,"episode":8,"knives":null}
+    {"name":"Staré časy","city":"Marianka","address":"Karpatská 4, 900 33 Marianka","lat":48.24779,"lon":17.05778,"series":2,"episode":8,"knives":null},
+    {"name":"Pizza Pub Tank","city":"Banská Bystrica","address":"Tulská 37, 974 04 Banská Bystrica","lat":48.72733,"lon":19.11474,"series":3,"episode":1,"knives":3},
+    {"name":"Retro Burger & Dinner","city":"Prešov","address":"Masarykova 29B, 080 01 Prešov","lat":48.9842456,"lon":21.2492812,"series":3,"episode":2,"knives":null},
+    {"name":"California Pub","city":"Ružomberok","address":"Klačno 2, 034 01 Ružomberok","lat":49.0847148,"lon":19.2679034,"series":3,"episode":6,"knives":null},
+    {"name":"Silvanus","city":"Kremnica","address":"Štefánikovo námestie 33/40, 967 01 Kremnica","lat":48.70519,"lon":18.91834,"series":3,"episode":11,"knives":null},
+    {"name":"Heydučka","city":"Bratislava","address":"Heydukova 12, 811 08 Bratislava","lat":48.1596424,"lon":17.1138006,"series":4,"episode":6,"knives":3},
+    {"name":"Pizza Italy","city":"Želiezovce","address":"Petőfiho 4, 948 03 Želiezovce","lat":48.0499456,"lon":18.6554231,"series":4,"episode":11,"knives":null},
+    {"name":"Tri groše","city":"Ľubietová","address":"Nám. V. Dunajského 314, 976 55 Ľubietová","lat":48.7460849347,"lon":19.3642357721,"series":4,"episode":12,"knives":5},
+    {"name":"Restaurace Anděl","city":"Valašské Klobouky","address":"Masarykovo náměstí 41, 766 01 Valašské Klobouky, Česko","lat":49.1406724,"lon":18.0079645,"series":5,"episode":5,"knives":null}
 ];
 
 let currentMarkers = {};
@@ -113,7 +127,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 function getColorForSeries(series) {
-    const colors = { 1: '#e74c3c', 2: '#3498db' };
+    const colors = { 1: '#e74c3c', 2: '#3498db', 3: '#2ecc71', 4: '#f39c12', 5: '#9b59b6' };
     return colors[series] || '#667eea';
 }
 
@@ -163,7 +177,7 @@ function updateUI() {
             <div class="r-info">
                 <div>📍 ${r.city}</div>
                 <div>🏠 ${r.address}</div>
-                <div style="margin-top: 3px; font-size: 10px; color: #999;">S${r.series}E${r.episode}</div>
+                <div style=\"margin-top: 3px; font-size: 10px; color: #999;\">S${r.series}E${r.episode}</div>
             </div>
             ${r.knives ? `<div class="r-knives">🔪 ${r.knives}</div>` : ''}
         </div>
